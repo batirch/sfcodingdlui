@@ -13,10 +13,21 @@ trigger DedupLeads on Lead (before insert) {
 
     for (Lead myLead : Trigger.new) {
         if (myLead.Email != null){
+            String firstNameMatch;
+            if(myLead.FirstName!=null){
+                firstNameMatch = myLead.FirstName.subString(0,1) + '%';
+            }
+            String companyMatch = '%' + myLead.Company + '%';
 
-            List<Contact> myCon = [Select FirstName, Id
+            List<Contact> myCon = [Select FirstName, Id, LastName,
+                                   Account.Name
                                   FROM Contact
-                                  Where Email = :myLead.Email];
+                                  Where (Email!= null
+                                  AND Email = :myLead.Email)
+                                  OR (FirstName != null
+                                  AND FirstName LIKE :firstNameMatch
+                                  AND LastName = :myLead.LastName
+                                  AND Account.Name LIKE :companyMatch)];
         System.debug(myCon.size() + ' contacts found');
 
 
