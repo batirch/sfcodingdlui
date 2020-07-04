@@ -13,7 +13,7 @@ trigger CallableContacts1 on Contact (after update) {
     List<Contact> listOfUpdates = [Select Id
                                   From Contact
                                   Where Phone != NULL
-                                  AND AccountId = :conAccInfo.id];
+                                  AND AccountId = :conAccInfo.account.id];
 
     System.debug(listOfUpdates.size() + ' contacts found');   
 
