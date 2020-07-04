@@ -8,6 +8,7 @@ trigger MatchAccOwner on Contact (before insert) {
                                  	Ownerid
                                  From Account
                                  Where Id = :myCon.AccountId];
+/// Another option of code without using  get(0) is LIMIT 1 command at SOQL Query
             myCon.OwnerId = accs.get(0).OwnerId;
         }
 
