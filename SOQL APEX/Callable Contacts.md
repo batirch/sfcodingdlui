@@ -5,7 +5,7 @@ trigger CallableContacts1 on Contact (after update) {
 
   for(Contact myCon : Trigger.new){
     //Account Info Query
-    Contact conAccInfo = [Select account.id
+    Contact conAccInfo = [Select account.id, account.Callable_Contacts__c
                               From Contact
                               Where Id = :myCon.Id];
 
@@ -16,9 +16,11 @@ trigger CallableContacts1 on Contact (after update) {
                                   AND AccountId = :conAccInfo.account.id];
 
     System.debug(listOfUpdates.size() + ' contacts found');   
-
+}
     // Add number of contacts in Account field
-    conAccInfo.Account.Callable_Contacts__c = listOfUpdates.size();  
+  List<Account> accUpdateList = new List<Account>();
+    For(Account acc : [SELECT Callable_Contacts__c,(SELECT id FROM Contacts Where Phone != NULL) FROM Account WHERE id =: accIdList]){
+        acc.Callable_Contacts__c = acc.Contacts.size();
+        accUpdateList.add(acc);
   }
-
 }
