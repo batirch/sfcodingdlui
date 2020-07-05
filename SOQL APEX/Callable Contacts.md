@@ -19,7 +19,7 @@ trigger CallableContacts1 on Contact (after update) {
 }
     // Add number of contacts in Account field
   List<Account> accUpdateList = new List<Account>();
-    For(Account acc : [SELECT Callable_Contacts__c,(SELECT id FROM Contacts Where Phone != NULL) FROM Account WHERE id =: accIdList]){
+    For(Account acc : [SELECT Callable_Contacts__c,(SELECT id FROM Contacts Where Phone != NULL) FROM Account WHERE id =:conAccInfo.account.id]){
         acc.Callable_Contacts__c = acc.Contacts.size();
         accUpdateList.add(acc);
   }
